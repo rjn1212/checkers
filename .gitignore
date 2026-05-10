@@ -1,0 +1,8 @@
+target/
+node_modules/
+dist/
+.idea/
+*.iml
+.DS_Store
+*.class
+checkers-frontend/node/

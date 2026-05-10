@@ -1,0 +1,36 @@
+.game-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  color: #e0e0e0;
+  min-width: 200px;
+}
+
+.game-info__turn {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.game-info__thinking {
+  color: #ffa726;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.game-info__side {
+  color: #aaa;
+}
+
+.game-info__captured {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9em;
+}

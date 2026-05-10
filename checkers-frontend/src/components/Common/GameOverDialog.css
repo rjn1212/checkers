@@ -1,0 +1,50 @@
+.game-over-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.game-over-dialog {
+  background: #2a2a2a;
+  padding: 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.game-over-dialog__title {
+  font-size: 2em;
+  margin: 0 0 12px;
+}
+
+.game-over-dialog__title.win {
+  color: #4caf50;
+}
+
+.game-over-dialog__title.loss {
+  color: #f44336;
+}
+
+.game-over-dialog__reason {
+  color: #aaa;
+  margin: 0 0 24px;
+}
+
+.game-over-dialog__btn {
+  padding: 12px 32px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.game-over-dialog__btn:hover {
+  background: #45a049;
+}
