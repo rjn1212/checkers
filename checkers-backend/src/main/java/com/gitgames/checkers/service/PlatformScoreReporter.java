@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,15 +37,16 @@ public class PlatformScoreReporter {
         int lost = game.getCapturedCount().getOrDefault(game.getAiSide(), 0);
 
         String body = String.format(
-                "{\"userId\":\"%s\",\"game\":\"checkers\",\"result\":\"%s\",\"score\":%d,\"metadata\":{\"difficulty\":\"%s\",\"captured\":%d,\"lost\":%d,\"moves\":%d}}",
-                userId, won ? "win" : "loss", won ? 1 : 0,
-                game.getAiDifficulty().name(), captured, lost, game.getMoveHistory().size()
+                "{\"gameSlug\":\"checkers\",\"userId\":\"%s\",\"score\":%d,\"metadata\":{\"result\":\"%s\",\"difficulty\":\"%s\",\"captured\":%d,\"lost\":%d,\"moves\":%d},\"completedAt\":\"%s\"}",
+                userId, won ? 1 : 0, won ? "win" : "loss",
+                game.getAiDifficulty().name(), captured, lost, game.getMoveHistory().size(),
+                Instant.now().toString()
         );
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(platformApiUrl + "/api/scores"))
                 .header("Content-Type", "application/json")
-                .header("X-API-Key", platformApiKey)
+                .header("Authorization", "Bearer " + platformApiKey)
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 

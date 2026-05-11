@@ -1,3 +1,4 @@
+import { PlatformClient } from '@gitgames/platform-sdk';
 import type {
   CreateGameRequest,
   GameState,
@@ -6,17 +7,15 @@ import type {
   MoveResponse,
 } from '../types/game';
 
+export const platform = new PlatformClient();
+
 const BASE_URL = '/api/v1/games';
 
 function getHeaders(): Record<string, string> {
-  const headers: Record<string, string> = {
+  return {
     'Content-Type': 'application/json',
+    ...platform.getAuthHeaders(),
   };
-  const token = sessionStorage.getItem('platformToken');
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-  return headers;
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
