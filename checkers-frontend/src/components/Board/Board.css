@@ -43,3 +43,31 @@
   background-color: rgba(76, 175, 80, 0.7);
   box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
 }
+
+/* Human move trail */
+.board__square--human-from {
+  box-shadow: inset 0 0 0 3px rgba(100, 180, 255, 0.6);
+}
+
+.board__square--human-to {
+  box-shadow: inset 0 0 0 3px rgba(100, 180, 255, 0.9);
+}
+
+.board__square--human-captured {
+  background-color: rgba(100, 180, 255, 0.15) !important;
+}
+
+/* AI move trail */
+.board__square--ai-from {
+  box-shadow: inset 0 0 0 3px rgba(255, 140, 50, 0.6);
+}
+
+.board__square--ai-to {
+  box-shadow: inset 0 0 0 3px rgba(255, 140, 50, 0.9);
+  background-color: rgba(255, 140, 50, 0.2) !important;
+}
+
+.board__square--ai-captured {
+  background-color: rgba(255, 60, 60, 0.25) !important;
+  box-shadow: inset 0 0 8px rgba(255, 60, 60, 0.4);
+}

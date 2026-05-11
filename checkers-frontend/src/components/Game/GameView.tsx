@@ -14,6 +14,8 @@ export function GameView() {
     loading,
     error,
     aiThinking,
+    lastHumanTrail,
+    lastAiTrail,
     newGame,
     selectPiece,
     deselectPiece,
@@ -54,6 +56,8 @@ export function GameView() {
           legalMoves={legalMoves}
           humanSide={game.humanSide}
           currentTurn={game.currentTurn}
+          lastHumanTrail={lastHumanTrail}
+          lastAiTrail={lastAiTrail}
           onSquareClick={handleSquareClick}
         />
       </div>
