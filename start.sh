@@ -7,8 +7,8 @@ BACKEND_PORT="${BACKEND_PORT:-8082}"
 FRONTEND_PORT="${FRONTEND_PORT:-5175}"
 
 echo "==> Starting Checkers"
-echo "    Frontend: http://localhost:$FRONTEND_PORT"
-echo "    Backend:  http://localhost:$BACKEND_PORT"
+echo "    Frontend dev: http://localhost:$FRONTEND_PORT"
+echo "    Backend:      http://localhost:$BACKEND_PORT"
 echo "    Ctrl+C to stop."
 echo ""
 
@@ -17,12 +17,22 @@ lsof -ti:"$BACKEND_PORT" | xargs kill -9 2>/dev/null || true
 lsof -ti:"$FRONTEND_PORT" | xargs kill -9 2>/dev/null || true
 sleep 1
 
+# Build frontend and copy to backend static resources
+echo "==> Building frontend..."
+cd "$FRONTEND_DIR"
+npm install --silent && npm run build --silent
+rm -rf "$BACKEND_DIR/src/main/resources/static"
+mkdir -p "$BACKEND_DIR/src/main/resources/static"
+cp -r dist/* "$BACKEND_DIR/src/main/resources/static/"
+echo "    Frontend built and copied to backend."
+echo ""
+
 # Start backend
 cd "$BACKEND_DIR"
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Dserver.port=$BACKEND_PORT" &
 BACKEND_PID=$!
 
-# Start frontend
+# Start frontend dev server
 cd "$FRONTEND_DIR"
 npx vite --port "$FRONTEND_PORT" &
 FRONTEND_PID=$!
