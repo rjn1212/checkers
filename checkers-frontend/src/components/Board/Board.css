@@ -9,6 +9,15 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
+@media (max-width: 700px) {
+  .board {
+    width: calc(100vw - 24px);
+    height: calc(100vw - 24px);
+    max-width: 560px;
+    max-height: 560px;
+  }
+}
+
 .board__square {
   display: flex;
   align-items: center;
