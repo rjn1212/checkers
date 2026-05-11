@@ -12,6 +12,10 @@ function getHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
+  const token = sessionStorage.getItem('platformToken');
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
   return headers;
 }
 

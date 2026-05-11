@@ -16,11 +16,13 @@ import java.util.UUID;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final PlatformScoreReporter scoreReporter;
     private final GameEngine gameEngine;
     private final MoveValidator moveValidator;
 
-    public GameService(GameRepository gameRepository) {
+    public GameService(GameRepository gameRepository, PlatformScoreReporter scoreReporter) {
         this.gameRepository = gameRepository;
+        this.scoreReporter = scoreReporter;
         this.moveValidator = new MoveValidator();
         WinConditionChecker winChecker = new WinConditionChecker(moveValidator);
         this.gameEngine = new GameEngine(moveValidator, winChecker);
@@ -96,12 +98,17 @@ public class GameService {
             game.setWinner(humanPlayer);
             game.setWinReason("No legal moves remaining");
             gameRepository.save(game);
+            scoreReporter.reportGameResult(game);
             return new MoveResult(move, null, game);
         }
 
         Move aiMove = null;
         if (game.isAiTurn()) {
             aiMove = makeAiMove(game);
+        }
+
+        if (game.getPhase() == GamePhase.GAME_OVER) {
+            scoreReporter.reportGameResult(game);
         }
 
         gameRepository.save(game);
