@@ -4,41 +4,49 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import jakarta.servlet.*;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Component
-@Order(1)
-public class PlatformAuthFilter implements Filter {
+public class PlatformAuthFilter extends OncePerRequestFilter {
 
     @Value("${platform.jwt.secret:}")
     private String jwtSecret;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String authHeader = httpRequest.getHeader("Authorization");
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
 
-        if (authHeader != null && authHeader.startsWith("Bearer ") && !jwtSecret.isEmpty()) {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ") && !jwtSecret.isBlank()) {
             String token = authHeader.substring(7);
             try {
                 DecodedJWT jwt = JWT.require(Algorithm.HMAC256(jwtSecret))
                         .withIssuer("game-platform")
                         .build()
                         .verify(token);
-                httpRequest.setAttribute("platformUserId", jwt.getSubject());
-                httpRequest.setAttribute("platformUsername", jwt.getClaim("username").asString());
+                request.setAttribute("platformUserId", jwt.getSubject());
+                request.setAttribute("platformUsername", jwt.getClaim("username").asString());
+                request.setAttribute("platformUserEmail", jwt.getClaim("email").asString());
+                request.setAttribute("platformUserRole", jwt.getClaim("role").asString());
             } catch (JWTVerificationException e) {
-                // Continue anonymously — token invalid but don't block
+                // Invalid token — continue anonymously
             }
         }
 
         chain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getRequestURI().startsWith("/platform/");
     }
 }
