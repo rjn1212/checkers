@@ -6,3 +6,4 @@ dist/
 .DS_Store
 *.class
 checkers-frontend/node/
+checkers-backend/src/main/resources/static/
